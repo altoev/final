@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Now | Altoev</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/nav.css">
+    <link rel="icon" href="images/favicon.ico">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            line-height: 1.8;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+        .content-wrapper {
+            padding: 60px 120px; /* Added padding to the sides for more spacing */
+            width: 95%; /* Increased width for maximum use of screen space */
+            max-width: 1800px; /* Increased max-width for larger screens */
+            margin: auto;
+            text-align: center;
+            flex: 1; /* Ensures the content pushes the footer to the bottom */
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 3rem;
+        }
+        p {
+            color: #555;
+            margin-bottom: 40px;
+            font-size: 1.2rem;
+        }
+        .booking-container {
+            width: 100%;
+            max-width: 1900px; /* Increased max-width even further */
+            margin: 0 auto;
+            padding: 100px; /* Increased padding for more spacious layout */
+            background-color: #fff;
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+            border-radius: 20px;
+            transition: transform 0.4s, box-shadow 0.4s;
+        }
+        .booking-container:hover {
+            transform: scale(1.04); /* Increased hover effect to make it pop more */
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.3);
+        }
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 20px;
+            }
+            .booking-container {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header>
+        <nav class="nav-bar">
+            <div class="logo">
+                <button onclick="window.location.href='/'" style="background: none; border: none; cursor: pointer;">
+                    <img src="images/logo.png" alt="Altoev Logo">
+                </button>
+            </div>
+            <ul class="nav-links">
+                <li><a href="book-referral-5927384268471">Book Now</a></li>
+                <li><a href="about">About Us</a></li>
+                <li><a href="contact">Contact</a></li>
+                <li><a href="login">Login</a></li>
+                <li><a href="register">Register</a></li>
+            </ul>
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Booking Engine Integration -->
+    <main class="content-wrapper" style="margin-top: 100px;">
+        <h1>Book Your Ride Today</h1>
+        <p>Use the form below to make a reservation for your perfect electric vehicle. We look forward to getting you on the road!</p>
+        
+        <div class="booking-container">
+            <script src="https://jaxev.altoev.com/public/car-rental/integrations/assets/integrator"></script>
+            <div class="hq-rental-software-integration"
+                 data-integrator_link="https://jaxev.altoev.com/public/car-rental/integrations"
+                 data-brand="s24lvs27-qwhj-vsiv-fytp-9lmmwtgx4md3"
+                 data-snippet="reservation-form"
+                 data-skip_language=""
+                 data-skip_redirect="1"
+                 data-reservation_page=""
+                 data-layout="vertical"
+                 data-currency=""
+                 data-rate_type_uuid=""
+                 data-referral=""></div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <a href="/">
+                    <img src="images/logo.png" alt="Altoev Logo">
+                </a>
+            </div>
+            <div class="footer-links">
+                <ul>
+                    <li><a href="terms">Terms of Service</a></li>
+                    <li><a href="privacy">Privacy Policy</a></li>
+                    <li><a href="contact">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Altoev, Inc. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Mobile Menu Toggle -->
+    <script>
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenu.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    </script>
+
+    <!-- FrontApp Chat Integration -->
+    <script src='https://chat-assets.frontapp.com/v1/chat.bundle.js'></script>
+    <script>
+      window.FrontChat('init', {chatId: 'fd98255e37879f83dc8410e7bb47cf13', useDefaultLauncher: true});
+    </script>
+    
+</body>
+</html>

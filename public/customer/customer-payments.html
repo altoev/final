@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Payments Overview</title>
+    <style>
+        /* Basic reset and styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-button {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .logout-button a {
+            padding: 10px 20px;
+            background-color: #e74c3c;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .logout-button a:hover {
+            background-color: #c0392b;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #000;
+            text-align: center;
+        }
+
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+        }
+
+        .details-table th,
+        .details-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .details-table th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #000;
+        }
+
+        .details-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .total-outstanding {
+            font-weight: bold;
+            font-size: 1.3rem;
+            color: #e74c3c;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .payment-section {
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .dropdown-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .dropdown-selected {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.3s ease-in-out;
+        }
+
+        .dropdown-selected:hover {
+            border-color: #007bff;
+        }
+
+        .dropdown-list {
+            position: absolute;
+            top: 105%;
+            left: 0;
+            right: 0;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .dropdown-list-item {
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .dropdown-list-item img {
+            width: 20px;
+            margin-right: 10px;
+        }
+
+        .dropdown-list-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .make-payment-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #000;
+            color: #fff;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            border: none;
+        }
+
+        .make-payment-button:hover {
+            background-color: #333;
+            transform: translateY(-2px);
+        }
+
+        .payment-amount {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.3s ease-in-out;
+        }
+
+        .payment-amount:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        #paymentStatus {
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .stripe-element {
+            width: 100%;
+            max-width: 100%;
+            margin: 20px 0;
+            padding: 10px;
+        }
+
+        .submit-new-card {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .submit-new-card:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Logout Button -->
+        <div class="logout-button">
+            <a href="/logout">Logout</a>
+        </div>
+
+        <!-- Reservations Overview -->
+        <div class="left-section">
+            <h1>Customer Payments Overview</h1>
+            <table class="details-table">
+                <thead>
+                    <tr>
+                        <th>Reservation ID</th>
+                        <th>Pick-up Date</th>
+                        <th>Return Date</th>
+                        <th>Total Cost</th>
+                        <th>Outstanding Balance</th>
+                    </tr>
+                </thead>
+                <tbody id="reservationDetails">
+                    <!-- Reservation details will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Payment Form -->
+        <div class="right-section">
+            <div id="totalOutstanding" class="total-outstanding">
+                <!-- Total outstanding balance will be inserted here -->
+            </div>
+            <div class="payment-section">
+                <div class="form-group">
+                    <label for="cardDropdown">Select Payment Method</label>
+                    <div class="dropdown-container">
+                        <div id="dropdownSelected" class="dropdown-selected" onclick="toggleDropdown()">
+                            <span>Select Card</span>
+                            <img src="https://img.icons8.com/material-rounded/24/000000/chevron-down.png" alt="Dropdown Arrow">
+                        </div>
+                        <div id="dropdownList" class="dropdown-list">
+                            <!-- Cards will be dynamically inserted here from Stripe -->
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="paymentAmount">Payment Amount</label>
+                    <input type="text" id="paymentAmount" class="payment-amount" placeholder="$0.00">
+                </div>
+                <button class="make-payment-button" onclick="makePayment()">Make Payment</button>
+                <div id="paymentStatus"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Card Modal -->
+    <div id="addCardModal" class="modal">
+        <div class="modal-content">
+            <span id="closeModal" class="close-modal">&times;</span>
+            <h3>Add a New Card</h3>
+            <div id="card-element" class="stripe-element">
+                <!-- Stripe Element for card input -->
+            </div>
+            <button id="submitNewCard" class="submit-new-card">Add Card</button>
+        </div>
+    </div>
+
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        let stripe;
+        let cardElement;
+        let selectedPaymentMethodId = null;
+
+        // Initialize Stripe and Elements
+        async function initializeStripe() {
+            try {
+                const response = await fetch('/api/stripe-key');
+                const data = await response.json();
+                const publishableKey = data.publishableKey;
+
+                if (publishableKey) {
+                    stripe = Stripe(publishableKey);
+
+                    // Initialize Stripe Elements
+                    const elements = stripe.elements();
+                    cardElement = elements.create('card');
+                    cardElement.mount('#card-element');
+                } else {
+                    console.error('Stripe publishable key not found');
+                }
+            } catch (error) {
+                console.error('Error fetching Stripe publishable key:', error);
+            }
+        }
+
+        // Function to toggle dropdown visibility
+        function toggleDropdown() {
+            const dropdownList = document.getElementById('dropdownList');
+            dropdownList.style.display = dropdownList.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Function to select a card from dropdown
+        function selectCard(cardNumber, cardBrand, paymentMethodId) {
+            if (paymentMethodId === 'new-card') {
+                openAddCardModal();
+                return;
+            }
+            const dropdownSelected = document.getElementById('dropdownSelected');
+            dropdownSelected.innerHTML = `<img src="https://img.icons8.com/color/48/000000/${cardBrand}.png" alt="Card Logo">
+                                          <span>${cardNumber}</span>
+                                          <img src="https://img.icons8.com/material-rounded/24/000000/chevron-down.png" alt="Dropdown Arrow">`;
+            selectedPaymentMethodId = paymentMethodId;
+            toggleDropdown();
+        }
+
+        // Function to open add card modal
+        function openAddCardModal() {
+            const modal = document.getElementById('addCardModal');
+            modal.style.display = 'flex';
+        }
+
+        // Function to close add card modal
+        document.getElementById('closeModal').onclick = function () {
+            const modal = document.getElementById('addCardModal');
+            modal.style.display = 'none';
+        }
+
+        // Function to fetch saved cards from Stripe
+        async function fetchCards() {
+            try {
+                const response = await fetch('/api/cards');
+                const cards = await response.json();
+                const dropdownList = document.getElementById('dropdownList');
+                dropdownList.innerHTML = '';
+
+                cards.forEach(card => {
+                    const listItem = document.createElement('div');
+                    listItem.className = 'dropdown-list-item';
+                    listItem.onclick = () => selectCard(`**** **** **** ${card.last4}`, card.brand, card.id);
+                    listItem.innerHTML = `
+                        <img src="https://img.icons8.com/color/48/000000/${card.brand}.png" alt="${card.brand} Logo">
+                        <span>**** **** **** ${card.last4}</span>
+                    `;
+                    dropdownList.appendChild(listItem);
+                });
+
+                // Add "Add New Card" option at the bottom of the dropdown
+                const addNewCardItem = document.createElement('div');
+                addNewCardItem.className = 'dropdown-list-item';
+                addNewCardItem.onclick = () => selectCard('', '', 'new-card');
+                addNewCardItem.innerHTML = `
+                    <span>Add a New Card</span>
+                `;
+                dropdownList.appendChild(addNewCardItem);
+            } catch (error) {
+                console.error('Error fetching cards:', error);
+            }
+        }
+
+        // Function to handle adding a new card without Setup Intent
+        document.getElementById('submitNewCard').onclick = async function () {
+            try {
+                // Step 1: Tokenize the card using Stripe.js
+                const { token, error } = await stripe.createToken(cardElement);
+
+                if (error) {
+                    console.error('Error creating token:', error);
+                    alert('Failed to tokenize card. Please try again.');
+                    return;
+                }
+
+                // Step 2: Send the token to the server to attach it to the customer
+                const response = await fetch('/api/add-card', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        token: token.id,
+                        customerId: 'cus_RCTJTIHutNkgxh', // Replace with the correct customer ID
+                    }),
+                });
+
+                if (response.ok) {
+                    alert('Card added successfully!');
+                    document.getElementById('addCardModal').style.display = 'none';
+                    fetchCards(); // Refresh the card list to include the new card
+                } else {
+                    const errorText = await response.text();
+                    console.error('Error adding card:', errorText);
+                    alert('Failed to add card. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error adding card:', error);
+            }
+        }
+
+        // Fetch and display customer reservations
+        async function fetchCustomerReservations() {
+            try {
+                const response = await fetch('/api/reservations');
+                const reservations = await response.json();
+                const customerReservations = reservations.filter(res => res.customerName === 'Anthony Cooks');
+                displayReservationDetails(customerReservations);
+            } catch (error) {
+                console.error('Error fetching reservations:', error);
+            }
+        }
+
+        function displayReservationDetails(reservations) {
+            const reservationDetails = document.getElementById('reservationDetails');
+            let totalOutstandingBalance = 0;
+            reservationDetails.innerHTML = '';
+
+            reservations.forEach(reservation => {
+                totalOutstandingBalance += reservation.outstandingBalance || 0;
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${reservation.reservationId}</td>
+                    <td>${formatDateTime(reservation.pickUpDate)}</td>
+                    <td>${formatDateTime(reservation.returnDate)}</td>
+                    <td>$${reservation.totalPrice ? reservation.totalPrice.toFixed(2) : '0.00'}</td>
+                    <td>$${reservation.outstandingBalance ? reservation.outstandingBalance.toFixed(2) : '0.00'}</td>
+                `;
+                reservationDetails.appendChild(row);
+            });
+
+            const totalOutstandingDiv = document.getElementById('totalOutstanding');
+            totalOutstandingDiv.textContent = `Total Outstanding Balance: $${totalOutstandingBalance.toFixed(2)}`;
+        }
+
+        // Function to format date and time
+        function formatDateTime(dateStr) {
+            const date = new Date(dateStr);
+            return `${date.toLocaleDateString()} ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+        }
+
+        // Function to handle payment amount formatting
+        document.getElementById('paymentAmount').addEventListener('blur', function (e) {
+            let value = e.target.value.replace(/[^0-9.]/g, ''); // Remove non-numeric characters
+            if (value) {
+                value = parseFloat(value).toFixed(2);
+            } else {
+                value = '0.00';
+            }
+            e.target.value = `$${value}`;
+        });
+
+        // Function to make a payment
+        async function makePayment() {
+            const paymentAmount = parseFloat(document.getElementById('paymentAmount').value.replace('$', '')).toFixed(2);
+
+            if (!paymentAmount || paymentAmount <= 0) {
+                alert('Please enter a valid payment amount.');
+                return;
+            }
+
+            if (!selectedPaymentMethodId) {
+                alert('Please select a payment method.');
+                return;
+            }
+
+            const reservationId = document.getElementById('reservationDetails').firstChild.firstChild.innerText;
+
+            try {
+                const response = await fetch('/api/pay', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        amount: Math.round(paymentAmount * 100), // Convert dollars to cents for Stripe
+                        paymentMethodId: selectedPaymentMethodId,
+                        reservationId: reservationId
+                    }),
+                });
+
+                if (response.ok) {
+                    document.getElementById('paymentStatus').innerHTML = `<span style="color: green; font-weight: bold;">Payment Successful</span>`;
+                    fetchCustomerReservations(); // Refresh reservations to update outstanding balance
+                } else {
+                    const errorText = await response.text();
+                    document.getElementById('paymentStatus').innerHTML = `<span style="color: red; font-weight: bold;">Payment failed - ${errorText}</span>`;
+                }
+            } catch (error) {
+                console.error('Error processing payment:', error);
+                document.getElementById('paymentStatus').innerHTML = `<span style="color: red; font-weight: bold;">Payment failed - ${error.message}</span>`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initializeStripe();
+            fetchCustomerReservations();
+            fetchCards();
+        });
+
+    </script>
+</body>
+
+</html>

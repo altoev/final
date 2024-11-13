@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Insurance & Identity - Altoev</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/nav.css">
+    <link rel="icon" href="images/favicon.ico">
+    <style>
+        /* Announcement Banner Styles */
+        .announcement-banner {
+            background-color: #d9534f;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            font-weight: bold;
+            font-size: 1rem;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .announcement-banner a {
+            color: #fff;
+            text-decoration: underline;
+            transition: color 0.3s;
+        }
+
+        body {
+            margin: 0;
+            padding-top: 100px;
+            font-family: Arial, sans-serif;
+            line-height: 1.8;
+        }
+
+        .nav-bar {
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            position: fixed;
+            top: 40px;
+            width: 100%;
+            z-index: 999;
+        }
+
+        .verification-section {
+            max-width: 1000px;
+            margin: 80px auto;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .verification-section h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        .iframe-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: space-between;
+        }
+        .iframe-wrapper {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            overflow: hidden;
+            height: 600px;
+            flex: 1 1 calc(50% - 15px);
+            min-width: 300px;
+        }
+        .iframe-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        @media (max-width: 768px) {
+            .iframe-container {
+                flex-direction: column;
+            }
+            .iframe-wrapper {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Announcement Banner -->
+    <div class="announcement-banner">
+        5% off with code 5OFF at checkout! - <a href="5offterms">Terms & Conditions</a>
+    </div>
+
+    <!-- Navigation Bar -->
+    <header>
+        <nav class="nav-bar">
+            <div class="logo">
+                <button onclick="window.location.href='/'" style="background: none; border: none; cursor: pointer;">
+                    <img src="images/logo.png" alt="Altoev Logo">
+                </button>
+            </div>
+            <ul class="nav-links">
+                <li><a href="book">Book Now</a></li>
+                <li><a href="about">About Us</a></li>
+                <li><a href="contact">Contact</a></li>
+                <li><a href="login">Login</a></li>
+                <li><a href="register">Register</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Verification Section -->
+    <main class="verification-section">
+        <h1>Verify Your Insurance & Identity</h1>
+        <p style="text-align: center; margin-bottom: 20px;">For a seamless experience, please verify your insurance and identity below:</p>
+        <div class="iframe-container">
+            <!-- Stripe Identity Verification -->
+            <div class="iframe-wrapper">
+                <iframe src="https://verify.stripe.com/v/eVa5nW5qCfqpg1y8ww" title="Stripe Identity Verification"></iframe>
+            </div>
+            <!-- Canopy Insurance Verification -->
+            <div class="iframe-wrapper">
+                <iframe src="https://app.usecanopy.com/c/altoev-inc" title="Canopy Insurance Verification"></iframe>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content" style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; padding: 20px;">
+            <div class="footer-logo">
+                <a href="/">
+                    <img src="images/logo.png" alt="Altoev Logo" style="width: 120px;">
+                </a>
+            </div>
+            <div class="footer-links">
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; justify-content: center; gap: 40px;">
+                    <li><a href="terms.html" style="color: #fff; text-decoration: none; transition: color 0.3s;">Terms of Service</a></li>
+                    <li><a href="privacy.html" style="color: #fff; text-decoration: none; transition: color 0.3s;">Privacy Policy</a></li>
+                    <li><a href="contact.html" style="color: #fff; text-decoration: none; transition: color 0.3s;">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom" style="margin-top: 20px; font-size: 0.9rem; text-align: center; padding-bottom: 20px;">
+            <p>&copy; 2024 Altoev, Inc. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+            <!-- FrontApp Chat Integration -->
+    <script src='https://chat-assets.frontapp.com/v1/chat.bundle.js'></script>
+    <script>
+      window.FrontChat('init', {chatId: 'fd98255e37879f83dc8410e7bb47cf13', useDefaultLauncher: true});
+    </script>
+    
+</body>
+</html>

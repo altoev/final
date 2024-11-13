@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            table-layout: fixed;
+        }
+
+        .details-table th,
+        .details-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+            font-size: 15px;
+        }
+
+        .details-table th {
+            background-color: #f8f8f8;
+            font-weight: bold;
+        }
+
+        .details-table td {
+            word-wrap: break-word;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Reservation Details</h1>
+        <div id="errorMessage" class="error-message"></div>
+        <table class="details-table">
+            <tbody id="reservationDetails">
+                <!-- Reservation details will be dynamically inserted here -->
+            </tbody>
+        </table>
+        <a href="reservations.html" class="back-button">Back to Reservations</a>
+    </div>
+
+    <script>
+        async function fetchReservationDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const reservationId = urlParams.get('reservationId');
+
+            if (!reservationId) {
+                displayError('Invalid reservation ID. Please go back and select a reservation.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://24.129.121.214/api/reservations/${reservationId}`);
+                if (!response.ok) {
+                    throw new Error('Reservation not found');
+                }
+                const reservation = await response.json();
+                displayReservationDetails(reservation);
+            } catch (error) {
+                displayError('Error fetching reservation details: ' + error.message);
+                console.error('Error fetching reservation details:', error);
+            }
+        }
+
+        function displayReservationDetails(reservation) {
+            const reservationDetails = document.getElementById('reservationDetails');
+            reservationDetails.innerHTML = `
+                <tr><th>Reservation ID</th><td>${reservation.reservationId}</td></tr>
+                <tr><th>Customer Name</th><td>${reservation.customerName}</td></tr>
+                <tr><th>Customer Email</th><td>${reservation.customerEmail || 'N/A'}</td></tr>
+                <tr><th>Customer Phone Number</th><td>${reservation.customerPhoneNumber || 'N/A'}</td></tr>
+                <tr><th>Vehicle</th><td>${reservation.vehicleClassLabel || 'N/A'} (${reservation.vehiclePlate || 'N/A'})</td></tr>
+                <tr><th>Pick-up Location</th><td>${reservation.pickUpLocation || 'N/A'}</td></tr>
+                <tr><th>Pick-up Date & Time</th><td>${formatDateTime(reservation.pickUpDate)}</td></tr>
+                <tr><th>Return Location</th><td>${reservation.returnLocation || 'N/A'}</td></tr>
+                <tr><th>Return Date & Time</th><td>${formatDateTime(reservation.returnDate)}</td></tr>
+                <tr><th>Total Price</th><td>$${reservation.totalPrice ? reservation.totalPrice.toFixed(2) : '0.00'}</td></tr>
+                <tr><th>Status</th><td>${reservation.reservationStatus ? reservation.reservationStatus.charAt(0).toUpperCase() + reservation.reservationStatus.slice(1) : 'N/A'}</td></tr>
+                <tr><th>Fuel Level (Pick-Up)</th><td>${reservation.fuelLevelPickUp || 'N/A'}</td></tr>
+                <tr><th>Fuel Level (Return)</th><td>${reservation.fuelLevelReturn || 'N/A'}</td></tr>
+                <tr><th>Odometer (Pick-Up)</th><td>${reservation.odometerPickUp || 'N/A'}</td></tr>
+                <tr><th>Odometer (Return)</th><td>${reservation.odometerReturn || 'N/A'}</td></tr>
+            `;
+        }
+
+        function formatDateTime(dateStr) {
+            if (!dateStr) {
+                return 'N/A';
+            }
+            const date = new Date(dateStr);
+            return `${date.toLocaleDateString()} ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+        }
+
+        function displayError(message) {
+            document.getElementById('errorMessage').textContent = message;
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchReservationDetails);
+    </script>
+</body>
+</html>

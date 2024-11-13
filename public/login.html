@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Altoev</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/nav.css">
+    <link rel="icon" href="images/favicon.ico">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            line-height: 1.8;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+        .content-wrapper {
+            padding: 40px;
+            max-width: 900px;
+            margin: auto;
+            text-align: center;
+            flex: 1; /* Ensures the content pushes the footer to the bottom */
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+        font-family: Arial, sans-serif;
+    }
+
+    .login-container {
+        padding: 20px;
+        border-radius: 10px;
+        background-color: #fff;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .login-container input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .login-container button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .login-container button:hover {
+        background-color: #0056b3;
+    }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header>
+        <nav class="nav-bar">
+            <div class="logo">
+                <button onclick="window.location.href='/'" style="background: none; border: none; cursor: pointer;">
+                    <img src="images/logo.png" alt="Altoev Logo">
+                </button>
+            </div>
+            <ul class="nav-links">
+                <li><a href="book">Book Now</a></li>
+                <li><a href="about">About Us</a></li>
+                <li><a href="contacl">Contact</a></li>
+                <li><a href="login">Login</a></li>
+                <li><a href="register">Register</a></li>
+            </ul>
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </nav>
+    </header>
+
+<body>
+<div class="login-container">
+    <h2>Login</h2>
+    <form action="/login" method="POST">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+    </form>
+</div>
+</body>
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <a href="/">
+                    <img src="images/logo.png" alt="Altoev Logo">
+                </a>
+            </div>
+            <div class="footer-links">
+                <ul>
+                    <li><a href="terms">Terms of Service</a></li>
+                    <li><a href="privacy">Privacy Policy</a></li>
+                    <li><a href="contact">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Altoev, Inc. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Mobile Menu Toggle -->
+    <script>
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenu.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    </script>
+
+            <!-- FrontApp Chat Integration -->
+    <script src='https://chat-assets.frontapp.com/v1/chat.bundle.js'></script>
+    <script>
+      window.FrontChat('init', {chatId: 'fd98255e37879f83dc8410e7bb47cf13', useDefaultLauncher: true});
+    </script>
+    
+</body>
+</html>

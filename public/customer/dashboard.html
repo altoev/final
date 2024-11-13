@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard</title>
+    <style>
+        /* Basic reset and styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-button {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .logout-button a {
+            padding: 10px 20px;
+            background-color: #e74c3c;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .logout-button a:hover {
+            background-color: #c0392b;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            margin-right: 5px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .tab.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #000;
+            text-align: center;
+        }
+
+        .reservation-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .reservation-table th,
+        .reservation-table td {
+            padding: 14px;
+            border: 1px solid #ddd;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .reservation-table th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #000;
+        }
+
+        .reservation-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .no-reservations {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #888;
+        }
+
+        .book-reservation-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            max-width: 200px;
+        }
+
+        .book-reservation-button:hover {
+            background-color: #0056b3;
+        }
+
+        .settings-form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fafafa;
+            border-radius: 10px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .settings-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .settings-form .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .settings-form .form-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.3s ease-in-out;
+        }
+
+        .settings-form .form-group input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .settings-form button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .settings-form button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Logout Button -->
+        <div class="logout-button">
+            <a href="/logout">Logout</a>
+        </div>
+
+        <!-- Tabs for Navigation -->
+        <div class="tabs">
+            <div id="upcoming-tab" class="tab active" onclick="showTab('upcoming')">Upcoming Reservations</div>
+            <div id="past-tab" class="tab" onclick="showTab('past')">Past Reservations</div>
+            <div id="settings-tab" class="tab" onclick="showTab('settings')">Settings</div>
+        </div>
+
+        <!-- Upcoming Reservations Tab Content -->
+        <div id="upcoming-content" class="tab-content active">
+            <h1>Upcoming Reservations</h1>
+            <div id="upcomingReservations"></div>
+        </div>
+
+        <!-- Past Reservations Tab Content -->
+        <div id="past-content" class="tab-content">
+            <h1>Past Reservations</h1>
+            <div id="pastReservations"></div>
+        </div>
+
+        <!-- Settings Tab Content -->
+        <div id="settings-content" class="tab-content">
+            <h1>Settings</h1>
+            <form id="settingsForm" class="settings-form">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" placeholder="Your Name">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Your Email">
+                </div>
+                <button type="submit">Update Settings</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchUpcomingReservations();
+            await fetchPastReservations();
+            document.getElementById('settingsForm').addEventListener('submit', updateSettings);
+        });
+
+        // Tab switching function
+        function showTab(tab) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // Add active class to clicked tab and corresponding content
+            document.getElementById(`${tab}-tab`).classList.add('active');
+            document.getElementById(`${tab}-content`).classList.add('active');
+        }
+
+        // Fetch and display upcoming reservations
+        async function fetchUpcomingReservations() {
+            try {
+                const response = await fetch('/api/reservations/upcoming');
+                const reservations = await response.json();
+                const upcomingReservationsDiv = document.getElementById('upcomingReservations');
+
+                if (reservations.length === 0) {
+                    upcomingReservationsDiv.innerHTML = `
+                        <p class="no-reservations">No Upcoming Reservations</p>
+                        <a href="#" class="book-reservation-button">Book a Reservation</a>
+                    `;
+                } else {
+                    let tableHtml = `
+                        <table class="reservation-table">
+                            <thead>
+                                <tr>
+                                    <th>Reservation ID</th>
+                                    <th>Pick-up Date</th>
+                                    <th>Return Date</th>
+                                    <th>Total Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+                    reservations.forEach(reservation => {
+                        tableHtml += `
+                            <tr>
+                                <td>${reservation.reservationId}</td>
+                                <td>${formatDateTime(reservation.pickUpDate)}</td>
+                                <td>${formatDateTime(reservation.returnDate)}</td>
+                                <td>$${reservation.totalPrice ? reservation.totalPrice.toFixed(2) : '0.00'}</td>
+                            </tr>
+                        `;
+                    });
+                    tableHtml += `</tbody></table>`;
+                    upcomingReservationsDiv.innerHTML = tableHtml;
+                }
+            } catch (error) {
+                console.error('Error fetching upcoming reservations:', error);
+            }
+        }
+
+        // Fetch and display past reservations
+        async function fetchPastReservations() {
+            try {
+                const response = await fetch('/api/reservations/past');
+                const reservations = await response.json();
+                const pastReservationsDiv = document.getElementById('pastReservations');
+
+                if (reservations.length === 0) {
+                    pastReservationsDiv.innerHTML = `
+                        <p class="no-reservations">No Past Reservations</p>
+                    `;
+                } else {
+                    let tableHtml = `
+                        <table class="reservation-table">
+                            <thead>
+                                <tr>
+                                    <th>Reservation ID</th>
+                                    <th>Pick-up Date</th>
+                                    <th>Return Date</th>
+                                    <th>Total Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+                    reservations.forEach(reservation => {
+                        tableHtml += `
+                            <tr>
+                                <td>${reservation.reservationId}</td>
+                                <td>${formatDateTime(reservation.pickUpDate)}</td>
+                                <td>${formatDateTime(reservation.returnDate)}</td>
+                                <td>$${reservation.totalPrice ? reservation.totalPrice.toFixed(2) : '0.00'}</td>
+                            </tr>
+                        `;
+                    });
+                    tableHtml += `</tbody></table>`;
+                    pastReservationsDiv.innerHTML = tableHtml;
+                }
+            } catch (error) {
+                console.error('Error fetching past reservations:', error);
+            }
+        }
+
+        // Update settings function
+        async function updateSettings(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+
+            try {
+                const response = await fetch('/api/update-settings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, email }),
+                });
+
+                if (response.ok) {
+                    alert('Settings updated successfully');
+                } else {
+                    const errorText = await response.text();
+                    alert(`Failed to update settings: ${errorText}`);
+                }
+            } catch (error) {
+                console.error('Error updating settings:', error);
+            }
+        }
+
+        // Function to format date and time
+        function formatDateTime(dateStr) {
+            const date = new Date(dateStr);
+            return `${date.toLocaleDateString()} ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+        }
+    </script>
+</body>
+
+</html>
